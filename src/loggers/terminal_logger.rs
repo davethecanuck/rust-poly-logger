@@ -11,6 +11,9 @@ pub struct TerminalLogger {
     // e.g. [{timestamp}] {level} [{path}] - {msg}
     // or   [%t] %l [%p] - %m
     msg_format: Option<String>,        
+
+    // Option to print to stdout instead of stderr (default)
+    use_stdout: bool,
 }
 
 impl TerminalLogger {
@@ -19,16 +22,22 @@ impl TerminalLogger {
             level_filter: level_filter,
             timestamp_format: None,
             msg_format: None,
+            use_stdout: false,
         }
     }
 
-    pub fn timestamp_format(&mut self, format: &str) -> &Self {
+    pub fn timestamp_format(&mut self, format: &str) -> &mut Self {
         self.timestamp_format = Some(String::from(format));
         self
     }
 
-    pub fn msg_format(&mut self, format: &str) -> &Self {
+    pub fn msg_format(&mut self, format: &str) -> &mut Self {
         self.msg_format = Some(String::from(format));
+        self
+    }
+
+    pub fn use_stdout(&mut self) -> &mut Self {
+        self.use_stdout = true;
         self
     }
 }
@@ -36,7 +45,7 @@ impl TerminalLogger {
 // Logger interface
 impl log::Log for TerminalLogger {
     fn enabled(&self, metadata: &log::Metadata) -> bool {
-        self.level_filter <= metadata.level()
+        metadata.level() <= self.level_filter
     }
 
     fn log(&self, record: &log::Record) {
@@ -59,21 +68,26 @@ impl log::Log for TerminalLogger {
         // EYE - use our custom format
         // EYE Optional based on format
         let now = Utc::now();
-        println!("[{}-{:02}-{:02} {:02}:{:02}:{:02}.{}] {} [{}:{}] {}", 
+        let msg = format!("[{}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}] {} [{}:{}] {}", 
                  now.year(), 
                  now.month(), 
                  now.day(), 
                  now.hour(), 
                  now.minute(), 
                  now.second(), 
-                 now.second(), // EYE should be microseconds
+                 0, // EYE should be microseconds
                  record.metadata().level(), 
                  file,
                  line, 
                  record.args());
+
+        match self.use_stdout {
+            false => eprintln!("{}", msg),
+            true => println!("{}", msg),
+        }
     }
 
-    fn flush(&self) {}
+    fn flush(&self) { }
 }
 
 #[cfg(test)]
