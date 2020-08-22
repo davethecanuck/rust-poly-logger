@@ -1,15 +1,12 @@
 use log::{LevelFilter};
-use chrono::{Datelike, Timelike, Utc};
 
 pub struct TerminalLogger {
     level_filter: LevelFilter,
     
-    // EYE change to chrono::format
+    // strftime format string
     timestamp_format: Option<String>,  
 
-    // EYE change to a new data type 
     // e.g. [{timestamp}] {level} [{path}] - {msg}
-    // or   [%t] %l [%p] - %m
     msg_format: Option<String>,        
 
     // Option to print to stdout instead of stderr (default)
@@ -26,6 +23,7 @@ impl TerminalLogger {
         }
     }
 
+    // Set format options
     pub fn timestamp_format(&mut self, format: &str) -> &mut Self {
         self.timestamp_format = Some(String::from(format));
         self
@@ -39,6 +37,20 @@ impl TerminalLogger {
     pub fn use_stdout(&mut self) -> &mut Self {
         self.use_stdout = true;
         self
+    }
+
+    // Retrieve formatted values
+    pub fn timestamp(&self) -> String {
+        let now = chrono::Local::now();
+        match &self.timestamp_format {
+            None => {
+                // Default format
+                now.to_rfc3339()
+            },
+            Some(f) => {
+                now.format(&f).to_string()
+            }
+        }
     }
 }
 
@@ -65,17 +77,9 @@ impl log::Log for TerminalLogger {
             None => 0,
         };
 
-        // EYE - use our custom format
-        // EYE Optional based on format
-        let now = Utc::now();
-        let msg = format!("[{}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}] {} [{}:{}] {}", 
-                 now.year(), 
-                 now.month(), 
-                 now.day(), 
-                 now.hour(), 
-                 now.minute(), 
-                 now.second(), 
-                 0, // EYE should be microseconds
+        let timestamp = self.timestamp();
+        let msg = format!("[{}] {} [{}:{}] {}", 
+                 timestamp,
                  record.metadata().level(), 
                  file,
                  line, 

@@ -12,20 +12,16 @@ fn main() {
        .use_stdout();
 
     let mut tl2 = TerminalLogger::new(LevelFilter::Info);
-    tl2.timestamp_format("%a %b %e %T")
-       .msg_format("[{timestamp}] {level} - {args}");
+    tl2.msg_format("[{timestamp}] {level} - {args}");
 
-    let tl3 = TerminalLogger::new(LevelFilter::Debug);
+    let mut tl3 = TerminalLogger::new(LevelFilter::Debug);
+    tl3.timestamp_format("");
     
     // Create the poly logger and add our logger instances
     let mut pl = PolyLogger::new();
-    println!("0. max_level={}", pl.max_level());
     pl.add(tl1);
-    println!("1. max_level={}", pl.max_level());
     pl.add(tl2);
-    println!("2. max_level={}", pl.max_level());
     pl.add(tl3);
-    println!("3. max_level={}", pl.max_level());
 
     // Logger init is the last step
     poly_logger::init(pl).unwrap();

@@ -5,7 +5,7 @@ use poly_logger::loggers::TerminalLogger;
 fn main() {
     // Create some logger instances
     let mut tl1 = TerminalLogger::new(LevelFilter::Info);
-    tl1.timestamp_format("%a %b %e %T %Y");
+    tl1.timestamp_format("%F %X%.3f %Z");
     tl1.msg_format("[{timestamp}] {level} [{file}:{line}] - {args}");
     log::set_boxed_logger(Box::new(tl1)).unwrap();
     log::set_max_level(LevelFilter::Trace);
