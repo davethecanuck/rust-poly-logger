@@ -5,8 +5,7 @@ use poly_logger::loggers::TerminalLogger;
 fn main() {
     // Create some logger instances
     let mut tl1 = TerminalLogger::new(LevelFilter::Info);
-    tl1.timestamp_format("%F %X%.3f %Z");
-    tl1.msg_format("{level} [{timestamp} {file}:{line}] - {args}");
+    tl1.msg_format("{foo} [{timestamp} {file}:{line}] - {baz}");
     TerminalLogger::init(tl1).unwrap();
 
     trace!("This is an TRACE message");

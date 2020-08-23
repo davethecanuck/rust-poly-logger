@@ -14,7 +14,8 @@ pub struct LogFormatter {
 }
 
 // NOTE: Using default error type
-type MsgResult = Result<String, std::fmt::Error>;
+//type MsgResult = Result<String, std::fmt::Error>;
+type MsgResult = Result<String, strfmt::FmtError>;
 
 impl LogFormatter {
     pub fn new() -> Self {
@@ -71,14 +72,7 @@ impl LogFormatter {
         vars.insert("file".to_string(), self.file(record));
         vars.insert("line".to_string(), self.line(record).to_string());
         vars.insert("args".to_string(), record.args().to_string());
-
-        // Need to convert to std::fmt::Error
-        match strfmt(self.msg_format, &vars) {
-            Ok(m) => Ok(m),
-            //Err(e) => std::fmt::Error::new(str(e)),
-            // EYE - No access to strfmt::fmt::Error
-            Err(e) => Ok(format!("Format error: {}", e)),
-        }
+        strfmt(self.msg_format, &vars)
     }
 
     fn timestamp(&self) -> String {

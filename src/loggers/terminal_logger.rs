@@ -1,4 +1,4 @@
-use log::{LevelFilter};
+use log::{LevelFilter, SetLoggerError};
 use super::LogFormatter;
 
 pub struct TerminalLogger {
@@ -21,6 +21,12 @@ impl TerminalLogger {
         }
     }
 
+    // Initialize log as boxed logger
+    pub fn init(logger: TerminalLogger) -> Result<(), SetLoggerError> {
+        log::set_max_level(logger.level_filter);
+        log::set_boxed_logger(Box::new(logger))
+    }
+
     // Set format options, passing through to LogFormatter
     pub fn timestamp_format(&mut self, format: &'static str) -> &mut Self {
         self.log_formatter.timestamp_format(format);
@@ -34,6 +40,11 @@ impl TerminalLogger {
 
     pub fn use_stdout(&mut self) -> &mut Self {
         self.use_stdout = true;
+        self
+    }
+
+    pub fn use_stderr(&mut self) -> &mut Self {
+        self.use_stdout = false;
         self
     }
 }
