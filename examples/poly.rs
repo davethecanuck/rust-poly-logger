@@ -11,11 +11,15 @@ fn main() {
        .msg_format("[{timestamp}] {level} [{file}:{line}] - {args}")
        .use_stdout();
 
+    // Default formatting
     let mut tl2 = TerminalLogger::new(LevelFilter::Info);
-    tl2.msg_format("[{timestamp}] {level} - {args}");
+    tl2.msg_format("{foo} {baz}");
 
     let mut tl3 = TerminalLogger::new(LevelFilter::Debug);
+    tl3.msg_format("MSG: {level} - {args}");
     tl3.timestamp_format("");
+
+    // EYE - TBD logger.json_format()
     
     // Create the poly logger and add our logger instances
     let mut pl = PolyLogger::new();

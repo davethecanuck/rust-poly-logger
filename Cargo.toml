@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 log = { version="0.4.8", features=["std"] }
 chrono = "0.4.15"
+strfmt = "0.1.6"
