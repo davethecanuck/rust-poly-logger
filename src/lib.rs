@@ -4,12 +4,6 @@ pub mod loggers;
 use log::{Level, SetLoggerError, MetadataBuilder};
 use std::fmt;
 
-// Initialize log as boxed logger
-pub fn init(pl: PolyLogger) -> Result<(), SetLoggerError> {
-    log::set_max_level(pl.max_level.to_level_filter());
-    log::set_boxed_logger(Box::new(pl))
-}
-
 // PolyLogger contains a list of child Log instances
 pub struct PolyLogger {
     loggers: Vec<Box<dyn log::Log>>,
@@ -19,6 +13,12 @@ pub struct PolyLogger {
 impl PolyLogger {
     pub fn new() -> Self {
         PolyLogger{loggers: Vec::new(), max_level: Level::Error}
+    }
+    
+    // Initialize log as boxed logger
+    pub fn init(self) -> Result<(), SetLoggerError> {
+        log::set_max_level(self.max_level.to_level_filter());
+        log::set_boxed_logger(Box::new(self))
     }
 
     pub fn max_level(&self) -> Level {

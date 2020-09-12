@@ -7,7 +7,7 @@ fn main() {
     let mut tl1 = TerminalLogger::new(LevelFilter::Info);
     tl1.timestamp_format("%F %X%.3f %Z");
     tl1.msg_format("{level} [{timestamp} {file}:{line}] - {args}");
-    TerminalLogger::init(tl1).unwrap();
+    tl1.init().unwrap();
 
     trace!("This is an TRACE message");
     debug!("This is a DEBUG message");

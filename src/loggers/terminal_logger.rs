@@ -21,10 +21,11 @@ impl TerminalLogger {
         }
     }
 
-    // Initialize log as boxed logger
-    pub fn init(logger: TerminalLogger) -> Result<(), SetLoggerError> {
-        log::set_max_level(logger.level_filter);
-        log::set_boxed_logger(Box::new(logger))
+    // Initialize log as boxed logger. This moves self
+    // so is the last method to call on this object.
+    pub fn init(self) -> Result<(), SetLoggerError> {
+        log::set_max_level(self.level_filter);
+        log::set_boxed_logger(Box::new(self))
     }
 
     // Set format options, passing through to LogFormatter

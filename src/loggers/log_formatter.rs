@@ -14,7 +14,6 @@ pub struct LogFormatter {
 }
 
 // NOTE: Using default error type
-//type MsgResult = Result<String, std::fmt::Error>;
 type MsgResult = Result<String, strfmt::FmtError>;
 
 impl LogFormatter {
@@ -42,8 +41,9 @@ impl LogFormatter {
     // Format value accessors
     pub fn msg(&self, record: &log::Record) -> MsgResult {
         // NOTE - Use strfmt only if custom message
-        // as it's more expensive. We could add various
-        // canned defaults for performance. 
+        // as it's more expensive. 
+        // Future option: We could add various
+        // canned defaults for performance reasons
         match self.use_strfmt {
             false => {
                 Ok(self.default_msg(record))

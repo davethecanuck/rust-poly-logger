@@ -1,0 +1,3 @@
+** runtime-fmt may be easier to use and faster than strfmt
+but relies on nightly build of rust to enable required
+features. Revisit if this changes
