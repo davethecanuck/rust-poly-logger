@@ -1,6 +1,6 @@
 use log::{trace,debug,info,warn,error};
 use log::LevelFilter;
-use poly_logger::loggers::TerminalLogger;
+use poly_logger::loggers::{TerminalLogger, FileLogger};
 use poly_logger::PolyLogger;
 
 fn main() {
@@ -31,11 +31,10 @@ fn main() {
        .timestamp_format("")
        .use_stdout();
 
-    // EYE - TBD logger.json_format()
-    
-    // EYE - TBD logger.raw_format()
-    
-    // EYE - TBD file_logger
+    // File logger
+    let mut fl0 = FileLogger::new(LevelFilter::Info, "/tmp/file_logger.log");
+    fl0.msg_format("Simple1: {level} [{timestamp}] {args}")
+       .timestamp_format("%T");
     
     // Create the poly logger and add our logger instances
     let mut pl = PolyLogger::new();
@@ -44,6 +43,7 @@ fn main() {
     pl.add(tl2);
     pl.add(tl3);
     pl.add(tl4);
+    pl.add(fl0);
     pl.init().unwrap();
 
     trace!("This is an TRACE message");
