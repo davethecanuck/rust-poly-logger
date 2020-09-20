@@ -56,8 +56,11 @@ impl log::Log for PolyLogger {
         metadata.level() <= self.max_level
     }
 
+    // EYE TBD - push record onto queue and do the actual
+    // logging and flushing in separate thread
+
     fn log(&self, record: &log::Record) {
-        // Each logger should check if enabled in the log() call
+        // Each logger checks if enabled in the log() call
         self.loggers.iter().for_each(|logger| { 
             logger.log(record); 
         });
@@ -67,13 +70,5 @@ impl log::Log for PolyLogger {
         self.loggers.iter().for_each(|logger| { 
             logger.flush();
         });
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
     }
 }

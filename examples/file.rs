@@ -1,13 +1,13 @@
 use log::{trace,debug,info,warn,error};
 use log::LevelFilter;
-use poly_logger::loggers::FileLogger;
+use poly_logger::NewFileLogger;
 
 fn main() {
-    // Create some logger instances
-    let mut tl1 = FileLogger::new(LevelFilter::Info, "./log/test.log");
-    tl1.timestamp_format("%F %X%.3f %Z");
-    tl1.msg_format("{level} [{timestamp} {file}:{line}] - {args}");
-    tl1.init().unwrap();
+    let mut logger = NewFileLogger::new(LevelFilter::Info, "/tmp/test.log");
+
+    logger.timestamp_format("%F %X%.3f %Z")
+          .msg_format("{level} [{timestamp} {file}:{line}] - {args}");
+    logger.init().unwrap();
 
     trace!("This is an TRACE message");
     debug!("This is a DEBUG message");

@@ -1,35 +1,33 @@
 use log::{trace,debug,info,warn,error};
 use log::LevelFilter;
-use poly_logger::loggers::{TerminalLogger, FileLogger};
-use poly_logger::PolyLogger;
+use poly_logger::{PolyLogger,StderrLogger,StdoutLogger,FileLogger};
 
 fn main() {
     // Create some logger instances and run all through
     // the PolyLogger
     
     // Default format 
-    let tl0 = TerminalLogger::new(LevelFilter::Info);
+    let tl0 = StderrLogger::new(LevelFilter::Info);
 
     // Custom format
-    let mut tl1 = TerminalLogger::new(LevelFilter::Warn);
+    let mut tl1 = StderrLogger::new(LevelFilter::Warn);
     tl1.timestamp_format("%a %b %e %T %Y")
        .msg_format("Custom: [{timestamp}] {level} [{file}:{line}] - {args}");
 
     // Simpler format
-    let mut tl2 = TerminalLogger::new(LevelFilter::Info);
+    let mut tl2 = StderrLogger::new(LevelFilter::Info);
     tl2.msg_format("Simple1: {level} [{timestamp}] {args}")
        .timestamp_format("%T");
 
     // Even simpler
-    let mut tl3 = TerminalLogger::new(LevelFilter::Debug);
+    let mut tl3 = StderrLogger::new(LevelFilter::Debug);
     tl3.msg_format("Simple2: {level} - {args}")
        .timestamp_format("");
 
     // Raw format to stdout
-    let mut tl4 = TerminalLogger::new(LevelFilter::Trace);
+    let mut tl4 = StdoutLogger::new(LevelFilter::Trace);
     tl4.msg_format("{args}")
-       .timestamp_format("")
-       .use_stdout();
+       .timestamp_format("");
 
     // File logger
     let mut fl0 = FileLogger::new(LevelFilter::Info, "/tmp/file_logger.log");

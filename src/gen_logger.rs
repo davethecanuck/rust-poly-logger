@@ -1,23 +1,22 @@
+use std::io::{Write};
+use std::sync::{Mutex};
 use log::{LevelFilter, SetLoggerError};
-use super::LogFormatter;
+use super::log_formatter::LogFormatter;
 
-pub struct TerminalLogger {
+//-------------------------------------------------
+pub struct GenLogger<T: Write + Sync + Send + 'static> {
     level_filter: LevelFilter,
-    
-    // MsgFormatter does most of the work
-    // for our logger implementations
-    pub log_formatter: LogFormatter,
-    
-    // Option to print to stdout instead of stderr (default)
-    use_stdout: bool,
+    log_formatter: LogFormatter,
+    writer: Mutex<T>,
 }
 
-impl TerminalLogger {
-    pub fn new(level_filter: LevelFilter) -> Self {
-        TerminalLogger {
+impl<T> GenLogger<T>
+where T: Write + Sync + Send + 'static {
+    pub fn new(level_filter: LevelFilter, writer: T) -> Self {
+        GenLogger {
             level_filter: level_filter,
             log_formatter: LogFormatter::new(),
-            use_stdout: false,
+            writer: Mutex::new(writer),
         }
     }
 
@@ -38,20 +37,11 @@ impl TerminalLogger {
         self.log_formatter.msg_format(format);
         self
     }
-
-    pub fn use_stdout(&mut self) -> &mut Self {
-        self.use_stdout = true;
-        self
-    }
-
-    pub fn use_stderr(&mut self) -> &mut Self {
-        self.use_stdout = false;
-        self
-    }
 }
 
 // Logger interface
-impl log::Log for TerminalLogger {
+impl<T> log::Log for GenLogger<T>
+where T: Write + Sync + Send + 'static {
     fn enabled(&self, metadata: &log::Metadata) -> bool {
         metadata.level() <= self.level_filter
     }
@@ -69,19 +59,14 @@ impl log::Log for TerminalLogger {
             },
         };
 
-        match self.use_stdout {
-            false => eprintln!("{}", msg),
-            true => println!("{}", msg),
-        }
+        // Note: may want option to not include newline
+        let mut w = self.writer.lock().unwrap();
+        w.write_all((msg + "\n").as_bytes()).unwrap();
     }
 
-    fn flush(&self) { }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn flush(&self) { 
+        let mut w = self.writer.lock().unwrap();
+        w.flush().unwrap();
     }
 }
+
