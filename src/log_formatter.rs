@@ -16,6 +16,16 @@ pub struct LogFormatter {
 // NOTE: Using default error type
 type MsgResult = Result<String, strfmt::FmtError>;
 
+impl Clone for LogFormatter {
+    fn clone(&self) -> LogFormatter {
+        LogFormatter {
+            timestamp_format: self.timestamp_format.clone(),
+            msg_format: self.msg_format.clone(),
+            use_strfmt: self.use_strfmt,
+        }
+    }
+}
+
 impl LogFormatter {
     pub fn new() -> Self {
         LogFormatter {

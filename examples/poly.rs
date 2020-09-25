@@ -30,9 +30,12 @@ fn main() {
        .timestamp_format("");
 
     // File logger
-    let mut fl0 = FileLogger::new(LevelFilter::Info, "/tmp/file_logger.log");
+    let filename = "/tmp/file_logger.log";
+    let mut fl0 = FileLogger::new(LevelFilter::Info);
     fl0.msg_format("Simple1: {level} [{timestamp}] {args}")
-       .timestamp_format("%T");
+       .timestamp_format("%T")
+       .filename(filename);
+    println!("Logging to {}", filename);
     
     // Create the poly logger and add our logger instances
     let mut pl = PolyLogger::new();
@@ -41,7 +44,7 @@ fn main() {
     pl.add(tl2);
     pl.add(tl3);
     pl.add(tl4);
-    pl.add(fl0);
+    pl.add(fl0.create());
     pl.init().unwrap();
 
     trace!("This is an TRACE message");

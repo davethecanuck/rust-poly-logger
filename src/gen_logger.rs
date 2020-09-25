@@ -37,6 +37,12 @@ where T: Write + Sync + Send + 'static {
         self.log_formatter.msg_format(format);
         self
     }
+
+    // Set an externally defined log_formatter
+    pub fn set_log_formatter(&mut self, log_formatter: &LogFormatter) -> &mut Self {
+        self.log_formatter = log_formatter.clone();
+        self
+    }
 }
 
 // Logger interface
