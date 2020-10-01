@@ -1,9 +1,14 @@
+//! Top level crate doc
+//! * here
+//! * and here
+
+// Private module used in other loggers
+mod log_formatter;
+
 // Import our loggers module
-pub mod log_formatter;
-pub use log_formatter::LogFormatter;
-pub mod poly_logger;
+mod poly_logger;
 pub use poly_logger::PolyLogger;
-pub mod gen_logger;
+mod gen_logger;
 pub use gen_logger::GenLogger;
-pub mod instance;
+mod instance;
 pub use instance::{StdoutLogger,StderrLogger,FileLogger};

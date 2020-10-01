@@ -3,10 +3,7 @@ use log::LevelFilter;
 use poly_logger::StderrLogger;
 
 fn main() {
-    let mut logger = StderrLogger::new(LevelFilter::Info);
-
-    logger.timestamp_format("%X%.6f")
-          .msg_format("[{timestamp} {file}:{line}] - {level} - {args}");
+    let logger = StderrLogger::new(LevelFilter::Info);
     logger.init().unwrap();
 
     trace!("This is an TRACE message");

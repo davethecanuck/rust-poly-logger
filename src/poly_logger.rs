@@ -1,3 +1,5 @@
+//! Documentation for 
+//! PolyLogger module 
 use log::{Level, SetLoggerError, MetadataBuilder};
 use std::fmt;
 
@@ -8,6 +10,9 @@ pub struct PolyLogger {
 }
 
 impl PolyLogger {
+    /// This is the PolyLogger constructor
+    /// * ooh
+    /// * aah
     pub fn new() -> Self {
         PolyLogger{loggers: Vec::new(), max_level: Level::Error}
     }

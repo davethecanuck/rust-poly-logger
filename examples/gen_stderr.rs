@@ -1,12 +1,9 @@
 use log::{trace,debug,info,warn,error};
 use log::LevelFilter;
-use poly_logger::StderrLogger;
+use poly_logger::GenLogger;
 
 fn main() {
-    let mut logger = StderrLogger::new(LevelFilter::Info);
-
-    logger.timestamp_format("%X%.6f")
-          .msg_format("[{timestamp} {file}:{line}] - {level} - {args}");
+    let logger = GenLogger::new(LevelFilter::Info, std::io::stderr());
     logger.init().unwrap();
 
     trace!("This is an TRACE message");
