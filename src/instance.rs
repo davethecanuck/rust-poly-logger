@@ -4,14 +4,27 @@ use log::{LevelFilter, SetLoggerError};
 use super::gen_logger::{GenLogger};
 use super::log_formatter::LogFormatter;
 
-// NOTE - These are really builder classes for returning
-// a GenLogger. We use new() and chained methods
-// to set the properties. E.g. We may want to set some 
-// properties in the FileLogger like 'truncate' or 'file name'
-// or 'auto file name version' before passing on to 
-// the GenLogger. 
-
-//-------------------------------------------------
+///    Implements a GenLogger that outputs to Stdout
+///
+///    # Simplest example
+///    ```
+///    let mut logger = StdoutLogger::new(LevelFilter::Info);
+///    logger.init().unwrap();
+///    ```
+///
+///    # Example with custom timestamp format and message format
+///    ```
+///    let mut logger = StdoutLogger::new(LevelFilter::Info);
+///    logger.timestamp_format("%X%.6f")
+///          .msg_format("[{timestamp} {file}:{line}] - {level} - {args}");
+///    logger.init().unwrap();
+///    ```
+///
+///    # Note
+///    The call to new() is actually returning an instance of GenLogger<Stdout>.
+///    StdoutLogger is just a way to instantiate a GenLogger with Stdout as
+///    the target for output.
+///
 pub struct StdoutLogger {}
 
 impl StdoutLogger {
@@ -20,7 +33,27 @@ impl StdoutLogger {
     }
 }
 
-//-------------------------------------------------
+///    Implements a GenLogger that outputs to Stderr
+///
+///    # Simplest example
+///    ```
+///    let mut logger = StderrLogger::new(LevelFilter::Info);
+///    logger.init().unwrap();
+///    ```
+///
+///    # Example with custom timestamp format and message format
+///    ```
+///    let mut logger = StderrLogger::new(LevelFilter::Info);
+///    logger.timestamp_format("%X%.6f")
+///          .msg_format("[{timestamp} {file}:{line}] - {level} - {args}");
+///    logger.init().unwrap();
+///    ```
+///
+///    # Note
+///    The call to new() is actually returning an instance of GenLogger<Stderr>.
+///    StderrLogger is just a way to instantiate a GenLogger with Stderr as
+///    the target for output.
+///
 pub struct StderrLogger {}
 
 impl StderrLogger {
@@ -79,10 +112,10 @@ impl FileLogger {
         self
     }
 
-    // We need to call this to get a Log interface 
-    // object such as when  passing to PolyLogger.
-    // If this is a standalone logger, create() will be
-    // called when do the init()
+    /// We need to call this to get a Log interface 
+    /// object such as when  passing to PolyLogger.
+    /// If this is a standalone logger, create() will be
+    /// called when do the init()
     pub fn create(&self) -> GenLogger<File> {
         match &self.filename {
             Some(filename) => {
