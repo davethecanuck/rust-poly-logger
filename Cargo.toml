@@ -3,6 +3,7 @@ name = "poly_logger"
 description = "A set of flexible logger classes"
 repository = "https://github.com/davethecanuck/rust-poly-logger"
 version = "0.1.0"
+license = "MIT/Apache-2.0"
 authors = ["David Sutherland <davethecanuck@gmail.com>"]
 edition = "2018"
 
