@@ -1,5 +1,6 @@
 //! # Overview 
-//! This crate provides several useful Log interface implementations. 
+//! This crate provides several useful 
+//! [log](https://docs.rs/log/0.4.11/log/) interface implementations. 
 //!
 //! [GenLogger](struct.GenLogger.html) is a generic logger 
 //! which allows custom message and time formats for a logger. 
@@ -28,7 +29,7 @@
 //! The examples directory provides use cases for each of the classes.
 //!
 //! # Notes
-//! I am new to Rust and this is an early release of this crate. 
+//! The author is new to Rust and this is an early release of this crate. 
 //! This crate will evolve as my familiarity with the language
 //! grows, and as I start using this crate in my own projects. I will
 //! however not break the current API without a major revision number
@@ -38,12 +39,17 @@
 //! * Reduce the use of unwrap() and do some proper error handling/propagation
 //! * Modify PolyLogger to use producer/consumer queue to minimize
 //!   the cost of logging in the main application thread
+//! * Possibly add producer/consumer queue to GenLogger
 //! * Add unit tests 
 //! * Add options to FileLogger to create an auto-naming and/or
 //!   auto-incrementing file naming convention. E.g. Perhaps set 
 //!   the filename to be "log.{yyyymmdd}.{hhmmss}". I.e. Add the 
 //!   same flexibility we have for the log messages to the log
-//!   file name itself
+//!   file name itself.
+//! * Look into replacement for [strfmt](https://docs.rs/strfmt/0.1.6/strfmt/)
+//!   for message formatting. Perhaps include some statically defined canned 
+//!   options or wait for a more efficient implementation when the rust 
+//!   language allows it.
 //!
 
 // Private module used in other loggers
@@ -51,7 +57,7 @@ mod log_formatter;
 
 // Import our loggers module
 mod poly_logger;
-pub use poly_logger::PolyLogger;
+pub use crate::poly_logger::PolyLogger;
 mod gen_logger;
 pub use gen_logger::GenLogger;
 mod instance;

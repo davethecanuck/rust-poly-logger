@@ -91,6 +91,10 @@ impl LogFormatter {
                 "".to_string()
             },
             f => {
+                // Note that we might want to separate the 
+                // timestamping of a message with the formatting of the
+                // timestamp, especially if we move to a producer/consumer
+                // queue
                 let now = chrono::Local::now();
                 now.format(&f).to_string()
             }
