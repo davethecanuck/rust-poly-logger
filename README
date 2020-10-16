@@ -1,3 +1,48 @@
-** runtime-fmt may be easier to use and faster than strfmt
-but relies on nightly build of rust to enable required
-features. Revisit if this changes
+Description
+-----------
+
+A set of classes that can be used to implement the Log interface.
+It provides more flexibility than other loggers in that both 
+the time and message format may be fully specified by the user. 
+This flexibility is afforded by use of the strfmt library but
+this comes at the expense of being more expensive than a statically
+defined canned format. 
+
+Classes
+-------
+
+GenLogger is a standard logger that takes a Writer as an input.
+StderrLogger and StdoutLogger are trivial wrappers for this
+that can be used for their respective output types. FileLogger
+also uses GenLogger but has additional options to specify file
+creation options.
+
+PolyLogger also implements the Log interface, and is a container
+for multiple other Log implementations. For instance, you can 
+add a FileLogger, a StderrLogger, and perhaps a 3rd-party logger
+to a PolyLogger, and then set PolyLogger as your main application
+log handler. A single info!/warn!/etc. call will cause the given
+message to be logged by each logger in whatever format you have
+specified in each logger, and with whatever level filter is 
+applied to each logger.
+
+Future Options
+--------------
+
+1. String Formatting
+
+The runtime-fmt may be easier to use and faster than strfmt
+for message formatting, but currently relies on the nightly 
+build of rust features. 
+
+In the meantime, it might be nice to create a set of statically
+defined formats that would be more efficient than using the 
+dynamically constructed strfmt method.
+
+2. Producer/Consumer Queue in PolyLogger
+
+The current implementation formats and logs all messages
+sequentially in the same thread as the application. Moving 
+to another thread (timestamping upon entry to the queue) 
+would decouple this.
+
